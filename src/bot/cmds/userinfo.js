@@ -15,7 +15,8 @@ class Userinfo {
       // Information about the command here
       name: "Me",
       bCommand: "me",
-      about: "Sends info about the user to the channel!"
+      about: "Sends info about the user to the channel!",
+      pm: false
     };
     this.perms = {
       // Permissions not added yet

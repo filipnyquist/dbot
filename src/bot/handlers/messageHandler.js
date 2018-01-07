@@ -54,7 +54,54 @@ class MessageHandler {
     const args = msgArray.slice(1);
     if (!command.startsWith(this.trigger)) return;
     const cmd = this.commands.get(command.slice(this.trigger.length));
-    if (cmd) cmd.run(msg, args);
+    if (cmd && msg.channel.type === "dm" && !cmd.info.pm) {
+      this.noPm(msg);
+    } else if (cmd && msg.channel.type === "dm") {
+      cmd.run(msg, args);
+    } else if (
+      cmd &&
+      !await this.db.cmdIsEnabled(
+        msg.guild.id,
+        command.slice(this.trigger.length)
+      )
+    ) {
+      this.notEnabled(msg);
+    } else if (
+      cmd &&
+      !await this.db.userHasPermission(
+        msg.guild.id,
+        msg.member,
+        command.slice(this.trigger.length)
+      )
+    ) {
+      this.noPerm(msg);
+    } else if (cmd) {
+      cmd.run(msg, args);
+    }
+  }
+
+  async notEnabled(msg) {
+    msg.react("❌");
+    const m = await msg.channel.send(
+      "❌ That command is not enabled on this server."
+    );
+    m.delete(5000);
+  }
+
+  async noPerm(msg) {
+    msg.react("❌");
+    const m = await msg.channel.send(
+      "❌ You do not have the rank needed to use this command."
+    );
+    m.delete(5000);
+  }
+
+  async noPm(msg) {
+    msg.react("❌");
+    const m = await msg.channel.send(
+      "❌ This command can´t be called from PMs."
+    );
+    m.delete(5000);
   }
 }
 

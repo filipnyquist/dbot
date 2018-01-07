@@ -18,6 +18,33 @@ class DatabaseHandler {
     return this.db;
   }
 
+  async cmdIsEnabled(guildId, command) {
+    const enabledCommands = await this.db
+      .db(guildId)
+      .table("settings")
+      .get("enabled")
+      .run();
+    if (!enabledCommands.enabled) return false;
+    if (enabledCommands.enabled.includes(command)) return true;
+
+    return false;
+  }
+
+  async userHasPermission(guildId, guildUser, command) {
+    const userRoles = guildUser.roles.map(r => r.name);
+    const permissions = await this.db
+      .db(guildId)
+      .table("settings")
+      .get("permissions")
+      .run();
+    if (!permissions) return false;
+    if (!permissions.permissions[command]) return false;
+    if (permissions.permissions[command].some(r => userRoles.includes(r))) {
+      return true;
+    }
+    return false;
+  }
+
   async createIfNotExists(guild) {
     this.query = await this.db
       .dbList()
@@ -34,15 +61,19 @@ class DatabaseHandler {
       .run();
     await this.db
       .db(guild.id)
-      .tableCreate("tickets")
+      .tableCreate("settings")
       .run();
     await this.db
-      .db("guildSettings")
-      .table("guilds")
+      .db(guild.id)
+      .table("settings")
       .insert([
         {
-          guildId: guild.id,
-          guildName: guild.name
+          id: "permissions",
+          permissions: []
+        },
+        {
+          id: "enabled",
+          enabled: ["ping", "me"]
         }
       ])
       .run();

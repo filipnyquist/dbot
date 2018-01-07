@@ -15,7 +15,8 @@ class Ping {
       // Information about the command here
       name: "ping",
       bCommand: "ping",
-      about: "Sends a ping to the client"
+      about: "Sends a ping to the client",
+      pm: true
     };
     this.perms = {
       // Permissions not added yet
