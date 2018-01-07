@@ -18,9 +18,6 @@ class Userinfo {
       about: "Sends info about the user to the channel!",
       pm: false
     };
-    this.perms = {
-      // Permissions not added yet
-    };
   }
 
   // Run gets called when command is recognized.
