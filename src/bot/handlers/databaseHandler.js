@@ -13,8 +13,9 @@ class DatabaseHandler {
     console.log("DatabaseHandler Started...");
   }
 
-  async getGuildConfig() {
-    // Get guild config via function
+  getRawRethink() {
+    // Get raw db for commands
+    return this.db;
   }
 
   async createIfNotExists(guild) {

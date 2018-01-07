@@ -13,6 +13,5 @@ client.on("ready", () => {
 });
 
 // On joining a new guild send the welcome message and make guild table in db.
-client.on("guildCreate", guild => {});
 
 client.login(cfg.get("Bot.token"));
