@@ -18,9 +18,6 @@ class Ping {
       about: "Sends a ping to the client",
       pm: true
     };
-    this.perms = {
-      // Permissions not added yet
-    };
   }
 
   // Run gets called when command is recognized.
